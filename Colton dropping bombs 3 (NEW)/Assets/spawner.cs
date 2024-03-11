@@ -16,8 +16,6 @@ public class Spawner : MonoBehaviour
     private float objectWidth;
     private float objectHeight;
 
-    UnityEngine.Random rand = new UnityEngine.Random();
-
  //    Start is called before the first frame update
     void Start()
     {
@@ -34,7 +32,7 @@ public class Spawner : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (active)
         {
-            float randomX = rand.Range(screenBounds.x - objectWidth, screenBounds.x * -1 + objectWidth);
+            float randomX = Random.Range(screenBounds.x - objectWidth, screenBounds.x * -1 + objectWidth);
             float spawnY = (screenBounds.y + objectHeight) + 5; 
 
             Instantiate(bombPrefab, new Vector3(randomX, spawnY, 0), bombPrefab.transform.rotation);
@@ -46,7 +44,7 @@ public class Spawner : MonoBehaviour
 
     void ResetDelay()
     {
-      delay = rand.Range(delayRange.x, delayRange.y);
+      delay = Random.Range(delayRange.x, delayRange.y);
     }
 
 }

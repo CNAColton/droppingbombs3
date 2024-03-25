@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private Spawner spawner;
-
+    private Spawner Spawner;
+    public GameObject title;
+    private Vector2 screenBounds;
 
     void Awake()
     {
-        spawner = GameObject.Find("Spawner").GetComponent<Spawner>();
+        Spawner = GameObject.Find("Spawner").GetComponent<Spawner>();
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(screenBounds.width, screenBounds.height, Camera.main.transform.postion.z));
     }
 
     void Start()
     {
-        spawner.active = false;
+        Spawner.active = false;
+        title.SetActive(true);
     }
 
     // Update is called once per frame
@@ -22,7 +27,18 @@ public class GameManager : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            spawner.active = true;  
+            Spawner.active = true;
+            title.SetActive(false);
+        }
+
+        var nextBomb = GameObject.FindGameObjectsWithTag("Bomb");
+
+        foreach (GameObject bombObject in nextBomb)
+        {
+            if (bombObject.transform.position.y < (-screenBounds.y) - 12)
+            {
+                Destroy(bombObject);
+            }
         }
     }
 }

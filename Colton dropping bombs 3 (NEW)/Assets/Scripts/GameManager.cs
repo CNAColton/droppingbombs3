@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Runtime.Remoting.Messaging;
+// using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,11 +9,15 @@ public class GameManager : MonoBehaviour
     private Spawner Spawner;
     public GameObject title;
     private Vector2 screenBounds;
+    public GameObject playerPrefab;
+    private GameObject player;
+    private bool gameStarted = false;
 
     void Awake()
     {
         Spawner = GameObject.Find("Spawner").GetComponent<Spawner>();
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(screenBounds.width, screenBounds.height, Camera.main.transform.postion.z));
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(screenBounds.x, screenBounds.y, Camera.main.transform.position.z));
+        player = playerPrefab;
     }
 
     void Start()
@@ -25,10 +29,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown)
+        if (!gameStarted)
         {
-            Spawner.active = true;
-            title.SetActive(false);
+            if (Input.anyKeyDown)
+            {
+                ResetGame();
+            }
+        }
+        else
+        {
+            if (!player)
+            {
+                OnPlayerKilled();
+            }
         }
 
         var nextBomb = GameObject.FindGameObjectsWithTag("Bomb");
@@ -40,5 +53,20 @@ public class GameManager : MonoBehaviour
                 Destroy(bombObject);
             }
         }
+    }
+    void ResetGame()
+    {
+        Spawner.active = true;
+        title.SetActive(false);
+        player = Instantiate(playerPrefab, new Vector3(0, 0, 0), playerPrefab.transform.rotation);
+        gameStarted = true;
+    }
+
+    void OnPlayerKilled()
+    {
+        Spawner.active = false;
+        gameStarted = false;
+
+        splash.SetActive(true);
     }
 }

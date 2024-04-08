@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
     private GameObject player;
     private bool gameStarted = false;
+    public GameObject splash;
 
     void Awake()
     {
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
     {
         Spawner.active = false;
         title.SetActive(true);
+        splash.SetActive(false);
     }
 
     // Update is called once per frame
@@ -48,16 +50,21 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject bombObject in nextBomb)
         {
-            if (bombObject.transform.position.y < (-screenBounds.y) - 12)
+            if (!gameStarted)
             {
                 Destroy(bombObject);
+            } else if (bombObject.transform.position.y < (-screenBounds.y) && gameStarted)
+            {
+
             }
         }
     }
+
     void ResetGame()
     {
         Spawner.active = true;
         title.SetActive(false);
+        splash.SetActive(false);
         player = Instantiate(playerPrefab, new Vector3(0, 0, 0), playerPrefab.transform.rotation);
         gameStarted = true;
     }

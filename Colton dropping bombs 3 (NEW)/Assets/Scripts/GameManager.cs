@@ -13,12 +13,17 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private bool gameStarted = false;
     public GameObject splash;
+    public Gameobject ScoreSystem;
+    public Text scoreText;
+    public int pointsWorth = 1;
+    private int score;
 
     void Awake()
     {
         Spawner = GameObject.Find("Spawner").GetComponent<Spawner>();
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(screenBounds.x, screenBounds.y, Camera.main.transform.position.z));
         player = playerPrefab;
+        scoreText.enabled = false;
     }
 
     void Start()
